@@ -1,4 +1,5 @@
 ---
+name: lookup-creds
 description: When you need database credentials (host/port/user/password/dbname) or API keys (api_key/base_url/model), automatically look them up from the credentials vault at ~/.claude/creds-vault.local.md before asking the user. Use this skill whenever you encounter tasks requiring database connections or LLM/API authentication.
 ---
 

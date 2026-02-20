@@ -1,4 +1,5 @@
 ---
+name: creds:remove
 description: Remove a credential from the vault by name
 ---
 

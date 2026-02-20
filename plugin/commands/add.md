@@ -1,4 +1,5 @@
 ---
+name: creds:add
 description: Add a new credential (database or API key) to the global vault
 ---
 

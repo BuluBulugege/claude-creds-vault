@@ -1,4 +1,5 @@
 ---
+name: creds:list
 description: List all stored credentials with sensitive values masked
 ---
 
