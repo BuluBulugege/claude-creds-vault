@@ -1,56 +1,49 @@
-# aiconfig — Claude Code Credential Vault Plugin
+[中文](./README.zh.md)
 
-A Claude Code plugin that automatically manages database credentials and API keys. No more manually typing passwords or API keys — Claude looks them up for you.
+# claude-creds-vault
+
+A Claude Code plugin that automatically manages database credentials and API keys. No more manually typing passwords or API keys — Claude looks them up from a local vault based on context.
 
 ## Features
 
 - **Auto-lookup**: Claude reads the vault before asking you for credentials
-- **Flexible tag matching**: tag credentials with `local`, `openai`, `prod`, etc. — Claude picks the right one from context
-- **Multiple vendors**: switch between OpenAI, Anthropic, DeepSeek, or any LLM provider seamlessly
-- **Global vault**: one credential store shared across all your projects
+- **Tag-based matching**: tag entries with `local`, `openai`, `prod`, etc. — Claude picks the right one from context
+- **Multi-vendor LLM support**: switch between OpenAI, Anthropic, DeepSeek, or any provider seamlessly
+- **Global vault**: one credential store shared across all projects
 
 ## Installation
 
 ```bash
-# Copy plugin to Claude Code plugins directory
-cp -r . ~/.claude/plugins/creds-vault
+cp -r plugin ~/.claude/plugins/creds-vault
 ```
 
-Restart Claude Code to load the plugin.
+Add the CLAUDE.md rule to your global `~/.claude/CLAUDE.md` (or append if it already exists):
 
-## Usage
-
-### Add a credential
-
-```
-/creds:add
+```bash
+cat CLAUDE.md >> ~/.claude/CLAUDE.md
 ```
 
-Prompts you for type (database or API key), fields, and tags.
+Restart Claude Code.
 
-### List all credentials
+## Commands
 
-```
-/creds:list
-```
+| Command | Description |
+|---------|-------------|
+| `/creds:add` | Add a database or API key credential |
+| `/creds:list` | List all credentials (sensitive values masked) |
+| `/creds:remove` | Remove a credential by name |
 
-Displays all stored credentials with sensitive values masked.
+## How It Works
 
-### Remove a credential
+Claude automatically reads `~/.claude/creds-vault.local.md` whenever a task requires credentials. It matches by tags using context from your request:
 
-```
-/creds:remove
-```
+- *"用 OpenAI 帮我调用接口"* → matches tag `openai`
+- *"连本地数据库"* → matches tag `local`
+- Multiple matches → Claude lists options and asks you to pick
 
-### Auto-lookup
+## Vault File Format
 
-Just work normally. When Claude needs a database connection or API key, it reads `~/.claude/creds-vault.local.md` and uses the matching credential automatically.
-
-Example: *"用 OpenAI 帮我调用这个接口"* → Claude finds the entry tagged `openai` and uses it.
-
-## Credential Storage
-
-Credentials are stored in `~/.claude/creds-vault.local.md` (global, never committed to git):
+`~/.claude/creds-vault.local.md` (never committed to git):
 
 ```yaml
 ---
@@ -61,7 +54,7 @@ credentials:
     host: localhost
     port: 5432
     user: postgres
-    password: "your-password"
+    password: "secret"
     dbname: myapp
 
   - name: openai-main
@@ -73,10 +66,10 @@ credentials:
 ---
 ```
 
-## Plugin Structure
+## Repository Structure
 
 ```
-creds-vault/
+plugin/
 ├── plugin.json
 ├── skills/
 │   └── lookup-creds.md      # Auto-triggers credential lookup
@@ -84,6 +77,7 @@ creds-vault/
     ├── add.md               # /creds:add
     ├── list.md              # /creds:list
     └── remove.md            # /creds:remove
+CLAUDE.md                    # Global rule for auto-lookup behavior
 ```
 
 ## License

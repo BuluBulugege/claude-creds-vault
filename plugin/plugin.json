@@ -1,0 +1,5 @@
+{
+  "name": "creds-vault",
+  "version": "1.0.0",
+  "description": "Auto-lookup database and API key credentials with flexible tag matching"
+}
