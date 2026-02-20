@@ -1,11 +1,11 @@
 # Credential Vault
 
-When a task requires API keys, base URLs, database credentials, or any external service authentication:
+When any task requires credentials of any kind (API keys, base URLs, database connections, tokens, secrets, service passwords, or any authentication info):
 
-1. **Read `~/.claude/creds-vault.local.md`** first
-2. Search the `credentials` array — match by `tags` or `name` based on context (e.g., user says "OpenAI" → match tag `openai`; "本地数据库" → match tag `local`)
-3. **If found**: use the credentials directly, no need to ask the user
-4. **If multiple matches**: list them and ask user to pick one
-5. **If not found**: use a placeholder (e.g., `<YOUR_API_KEY>`), complete the task, then remind user to run `/creds:add` to save the real credentials
+1. **Read `~/.claude/creds-vault.local.md`** immediately — do not ask the user first
+2. Match by `tags` or `name` using context inference from the task at hand
+3. **If found (one match)**: use it directly and silently — no confirmation needed
+4. **If multiple matches**: infer the best fit from context; only ask if genuinely impossible to determine
+5. **If not found**: use a placeholder, complete the task fully, then suggest `/creds:add` at the end
 
-Never ask the user to manually type credentials that already exist in the vault.
+**Default behavior: act autonomously. Never interrupt the coding flow to ask for credentials that can be reasonably inferred.**
